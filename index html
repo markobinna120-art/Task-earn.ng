@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>social-task1</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,system-ui}
+body{background:#f6faf6}
+.header{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:#fff;border-bottom:1px solid #eee;position:sticky;top:0;z-index:10}
+.logo{display:flex;align-items:center;gap:8px;font-weight:900;color:#0ea500}
+.side-menu{position:fixed;top:0;left:-280px;width:260px;height:100%;background:#fff;z-index:100;transition:.3s;padding:16px;border-right:1px solid #eee;overflow:auto}
+.side-menu.active{left:0}
+.menu-item{padding:12px;border-radius:12px;margin:6px 0;cursor:pointer;font-weight:700;display:flex;justify-content:space-between}
+.menu-item:hover{background:#f0f8ef}
+.page{padding:14px;max-width:600px;margin:0 auto}
+.hidden{display:none!important}
+.card{background:#fff;border:1px solid #e9ece9;border-radius:18px;padding:14px;margin:10px 0}
+.green-banner{background:#0ea500;color:#fff;padding:10px;text-align:center;font-weight:700;display:flex;justify-content:center;align-items:center;gap:10px}
+.btn-wa{background:#fff;color:#0ea500;border:none;padding:6px 14px;border-radius:20px;font-weight:800}
+.task-fansup{background:#fff;border:1px solid #eee;border-radius:18px;overflow:hidden;margin:10px 0}
+.task-top{display:flex;gap:12px;padding:12px}
+.task-logo{width:48px;height:48px;border-radius:50%;background:#f5f5f5;display:flex;align-items:center;justify-content:center}
+.task-logo img{width:36px;height:36px;border-radius:50%}
+.badge{background:#f1f1;padding:4px 8px;border-radius:20px;font-size:11px;font-weight:700}
+.task-bottom{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-top:1px solid #f0f0f0;background:#fafffa}
+.start-btn{background:#0ea500;color:#fff;border:none;padding:10px 18px;border-radius:12px;font-weight:800}
+.post-box{border:2px solid #0ea500;border-radius:18px;padding:14px;background:#fff}
+.post-box input,.post-box select,.post-box textarea{width:100%;padding:12px;margin:8px 0;border:1px solid #ddd;border-radius:12px;background:#f0f6ff}
+.post-btn{width:100%;background:#0e7a00;color:#fff;padding:14px;border:none;border-radius:12px;font-weight:900;margin-top:10px}
+.active{font-weight:900;color:#0ea500}
+.inactive{color:#888}
+#appGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:10px 0}
+.popup{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);display:none;justify-content:center;align-items:center;z-index:200;padding:14px}
+.popup-box{background:#fff;border-radius:18px;padding:16px;width:100%;max-width:400px}
+</style>
+</head>
+<body>
+<div class="header">
+<div class="logo"><img src="https://cdn.simpleicons.org/slack/0ea500" style="width:32px;height:32px;border-radius:50%"> social-task1</div>
+<div style="display:flex;gap:14px"><span onclick="showPage('home')" style="cursor:pointer">🔔</span><span onclick="toggleMenu()" style="cursor:pointer;font-size:20px">☰</span></div>
+</div>
+<div class="green-banner">🌍 Official Group <button class="btn-wa" onclick="window.open('https://wa.me','_blank')">Join WhatsApp</button></div>
+<div class="side-menu" id="sideMenu">
+<h3 style="color:#0ea500">social-task1</h3>
+<div class="menu-item" onclick="showPage('home');toggleMenu()">🏠 Home</div>
+<div class="menu-item" onclick="showPage('tasks');toggleMenu()">📋 All Tasks</div>
+<div class="menu-item" onclick="showPage('post');toggleMenu()">➕ Post Task <span id="activeCount" style="background:#0ea500;color:#fff;padding:2px 8px;border-radius:20px;font-size:12px">0</span></div>
+<div class="menu-item" onclick="showPage('deposit');toggleMenu()">💰 Deposit <span id="menuDep">₦0</span></div>
+<div class="menu-item" onclick="showPage('withdraw');toggleMenu()">🏦 Withdraw</div>
+<div class="menu-item" onclick="showPage('referral');toggleMenu()">👥 Referral</div>
+<div class="menu-item" id="adminLink" onclick="showPage('admin');toggleMenu()" style="display:none">🛠 Admin Panel</div>
+<div class="menu-item" onclick="logout()">🚪 Logout</div>
+</div>
+<div id="auth" class="page">
+<div class="card" style="text-align:center">
+<h2 style="color:#0ea500">Welcome</h2>
+<div style="display:flex;gap:10px;justify-content:center;margin:12px 0">
+<button id="tabSignIn" class="active" onclick="setAuthMode('signin')" style="flex:1;padding:10px;border:none;border-radius:10px">Sign In</button>
+<button id="tabSignUp" class="inactive" onclick="setAuthMode('signup')" style="flex:1;padding:10px;border:none;border-radius:10px">Sign Up</button>
+</div>
+<input id="aUser" class="hidden" placeholder="Username" style="width:100%;padding:12px;margin:6px 0;border-radius:12px;border:1px solid #ddd">
+<input id="aEmail" placeholder="Email" style="width:100%;padding:12px;margin:6px 0;border-radius:12px;border:1px solid #ddd">
+<input id="aPass" type="password" placeholder="Password" style="width:100%;padding:12px;margin:6px 0;border-radius:12px;border:1px solid #ddd">
+<input id="aRef" class="hidden" placeholder="Referral Code" style="width:100%;padding:12px;margin:6px 0;border-radius:12px;border:1px solid #ddd">
+<input id="aCode" class="hidden" placeholder="Enter Code" style="width:100%;padding:12px;margin:6px 0;border-radius:12px;border:1px solid #ddd">
+<div id="emailStatus" style="font-size:12px;color:#0ea500;margin:6px"></div>
+<button id="authBtn" onclick="handleAuth()" style="width:100%;padding:14px;background:#0ea500;color:#fff;border:none;border-radius:12px;font-weight:800;margin-top:8px">Sign In</button>
+<button id="switchBtn" onclick="toggleAuthMode()" style="width:100%;padding:10px;background:none;border:none;color:#555;margin-top:6px">Don't have account? Sign Up</button>
+</div>
+</div>
+<div id="home" class="page hidden">
+<div class="card"><div style="display:flex;justify-content:space-between"><div><small>Available</small><br><b id="avBal">₦0</b></div><div><small>Pending</small><br><b id="pdBal">₦0</b></div><div><small>Posting</small><br><b id="postDep">₦0</b></div></div></div>
+<h4>Tasks For You <span onclick="showPage('tasks')" style="float:right;color:#0ea500;font-size:12px;cursor:pointer">View All →</span></h4>
+<div id="homeTasks"></div>
+</div>
+<div id="tasks" class="page hidden">
+<h3>All Tasks</h3>
+<div id="allTasks"></div>
+<div style="display:flex;justify-content:space-between;margin:14px 0"><button onclick="changePage(-1)" style="padding:10px 16px;border-radius:10px;border:1px solid #ddd">Prev</button><span id="pageInfo" style="padding:10px;font-weight:700">Page 1</span><button onclick="changePage(1)" style="padding:10px 16px;border-radius:10px;border:1px solid #ddd">Next</button></div>
+</div>
+<div id="post" class="page hidden">
+<div id="emptyState" style="text-align:center;padding:20px;background:#fff;border-radius:18px;margin-bottom:12px"><h3>No Tasks Yet</h3><small style="color:#888">You haven't created any tasks yet.</small></div>
+<div id="myCreatedList"></div>
+<div class="post-box" style="margin-top:14px">
+<h3>Create New Task</h3>
+<p>Select Platform</p>
+<div id="appGrid"></div>
+<div id="selectedAppText" style="color:#0ea500;font-weight:800;margin:8px 0">Selected: Facebook ✓</div>
+<label>Task Type</label>
+<select id="pType"></select>
+<label>Task Link</label>
+<input id="pLink" placeholder="https://...">
+<label>Units</label>
+<input id="pQty" type="number" placeholder="e.g 10" value="1">
+<div id="customBox" class="hidden">
+<label>Custom Comments (separate by new line or comma)</label>
+<textarea id="customCommentsInput" rows="4" placeholder="Nice video&#10;Great content"></textarea>
+</div>
+<div id="priceInfo" style="background:#f0fff0;padding:10px;border-radius:12px;margin:8px 0">You will pay: <b>₦0</b> (Workers see only their earn)</div>
+<button onclick="createTask()" class="post-btn">Post Now</button>
+</div>
+</div>
+<div id="deposit" class="page hidden">
+<div class="card"><h3>Deposit</h3><p>Posting Balance: <b id="depBalText">₦0</b></p><input id="dName" placeholder="Account Name" style="width:100%;padding:12px;margin:6px 0;border-radius:12px;border:1px solid #ddd"><input id="dAmt" type="number" placeholder="Amount" style="width:100%;padding:12px;margin:6px 0;border-radius:12px;border:1px solid #ddd"><button onclick="submitDeposit()" style="width:100%;padding:12px;background:#0ea500;color:#fff;border:none;border-radius:12px;margin-top:8px">Submit Deposit</button></div>
+<div class="card"><h4>My Deposits</h4><div id="myDeposits"></div></div>
+</div>
+<div id="withdraw" class="page hidden">
+<div class="card"><h3>Withdraw</h3><div style="display:flex;gap:10px"><div>Av: <b id="wAvBal">₦0</b></div><div>Pd: <b id="wPdBal">₦0</b></div></div><p id="wInfo" style="font-size:12px;color:#888;margin:8px 0">Min ₦300 Charge ₦20</p><input id="wAccName" placeholder="Account Name" style="width:100%;padding:12px;margin:6px 0;border-radius:12px;border:1px solid #ddd"><input id="wAccNum" placeholder="Account Number" style="width:100%;padding:12px;margin:6px 0;border-radius:12px;border:1px solid #ddd"><input id="wBank" placeholder="Bank Name" style="width:100%;padding:12px;margin:6px 0;border-radius:12px;border:1px solid #ddd"><input id="wAmt" type="number" placeholder="Amount" style="width:100%;padding:12px;margin:6px 0;border-radius:12px;border:1px solid #ddd"><button onclick="requestWithdraw()" style="width:100%;padding:12px;background:#0ea500;color:#fff;border:none;border-radius:12px;margin-top:8px">Withdraw</button></div>
+<div class="card"><div id="myWithdrawals"></div></div>
+</div>
+<div id="referral" class="page hidden">
+<div class="card"><h3>Referral</h3><p>Code: <b id="myRefCode"></b></p><p style="word-break:break-all;background:#f0f0f0;padding:8px;border-radius:10px;font-size:12px" id="myRefLink"></p><button onclick="copyRef()" style="width:100%;padding:12px;background:#0ea500;color:#fff;border:none;border-radius:12px">Copy Link</button><div style="display:flex;gap:10px;margin-top:10px"><div>Count: <b id="refCount">0</b></div><div>Earn: <b id="refEarn">₦0</b></div></div><div id="myReferralsList" style="margin-top:10px"></div></div>
+</div>
+<div id="admin" class="page hidden">
+<div class="card" style="display:flex;gap:6px;flex-wrap:wrap"><button onclick="showAdmin('users')" style="padding:8px 12px;border-radius:20px;border:1px solid #0ea500">Users</button><button onclick="showAdmin('pendingBal')" style="padding:8px 12px;border-radius:20px;border:1px solid #0ea500">Pending Bal</button><button onclick="showAdmin('proofs')" style="padding:8px 12px;border-radius:20px;border:1px solid #0ea500">Proofs</button><button onclick="showAdmin('depositsAdmin')" style="padding:8px 12px;border-radius:20px;border:1px solid #0ea500">Deposits</button><button onclick="showAdmin('withdrawalsAdmin')" style="padding:8px 12px;border-radius:20px;border:1px solid #0ea500">Withdrawals</button><button onclick="showAdmin('allTasksAdmin')" style="padding:8px 12px;border-radius:20px;border:1px solid #0ea500">All Tasks</button></div>
+<div class="card" id="adminContent"></div>
+</div>
+<div id="taskPopup" class="popup"><div class="popup-box"><h3 id="popTitle"></h3><a id="popLink" target="_blank" style="color:#0ea500;font-weight:800">Open Task Link</a><div id="popCustomList"></div><input id="popHandle" placeholder="Your username/handle" style="width:100%;padding:12px;margin:10px 0;border-radius:12px;border:1px solid #ddd"><input id="popFile" type="file" accept="image/*" style="width:100%;margin:8px 0"><div style="display:flex;gap:8px"><button onclick="closePopup('taskPopup')" style="flex:1;padding:12px;border-radius:12px;border:1px solid #ddd">Cancel</button><button onclick="submitProof()" style="flex:1;padding:12px;background:#0ea500;color:#fff;border:none;border-radius:12px">Submit Proof</button></div></div></div>
+<div id="successPopup" class="popup"><div class="popup-box" style="text-align:center"><h3>✅ Submitted!</h3><p>Your proof is pending verification</p><button onclick="closePopup('successPopup')" style="width:100%;padding:12px;background:#0ea500;color:#fff;border:none;border-radius:12px;margin-top:10px">OK</button></div></div>
+<div id="lowBalPopup" class="popup"><div class="popup-box" style="text-align:center"><h3>Low Posting Balance</h3><p>Deposit to post tasks</p><div style="display:flex;gap:8px;margin-top:10px"><button onclick="closePopup('lowBalPopup')" style="flex:1;padding:12px;border-radius:12px;border:1px solid #ddd">Cancel</button><button onclick="goToDepositFromLowBal()" style="flex:1;padding:12px;background:#0ea500;color:#fff;border:none;border-radius:12px">Deposit</button></div></div></div>
+<div id="postSuccessPopup" class="popup"><div class="popup-box" style="text-align:center"><h3>✅ Task Posted!</h3><p>Your task has successfully been posted</p><button onclick="closePopup('postSuccessPopup')" style="width:100%;padding:12px;background:#0ea500;color:#fff;border:none;border-radius:12px;margin-top:10px">OK</button></div></div>
+<div id="depositSuccessPopup" class="popup"><div class="popup-box" style="text-align:center"><h3>✅ Deposit Sent!</h3><p>Your deposit has been made will be reviewed and approved within 24 hours</p><button onclick="closePopup('depositSuccessPopup')" style="width:100%;padding:12px;background:#0ea500;color:#fff;border:none;border-radius:12px;margin-top:10px">OK</button></div></div>
+<div id="withdrawSuccessPopup" class="popup"><div class="popup-box" style="text-align:center"><h3>✅ Withdrawal Placed!</h3><p>Your withdrawal has been placed will be approved within 24 hours</p><button onclick="closePopup('withdrawSuccessPopup')" style="width:100%;padding:12px;background:#0ea500;color:#fff;border:none;border-radius:12px;margin-top:10px">OK</button></div></div>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script src="app.js?v=9999"></script>
+</body>
+</html>
