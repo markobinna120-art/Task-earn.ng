@@ -40,7 +40,7 @@ body{background:#f6faf6}
 <div class="logo"><img src="https://cdn.simpleicons.org/slack/0ea500" style="width:32px;height:32px;border-radius:50%"> social-task1</div>
 <div style="display:flex;gap:14px"><span onclick="showPage('home')" style="cursor:pointer">🔔</span><span onclick="toggleMenu()" style="cursor:pointer;font-size:20px">☰</span></div>
 </div>
-<div class="green-banner">🌍 Official Group <button class="btn-wa" onclick="window.open('https://wa.me','_blank')">Join WhatsApp</button></div>
+<div class="green-banner">📣 Official Group <button class="btn-wa" onclick="window.open('https://wa.me','_blank')">Join WhatsApp</button></div>
 <div class="side-menu" id="sideMenu">
 <h3 style="color:#0ea500">social-task1</h3>
 <div class="menu-item" onclick="showPage('home');toggleMenu()">🏠 Home</div>
@@ -100,11 +100,25 @@ body{background:#f6faf6}
 <div id="priceInfo" style="background:#f0fff0;padding:10px;border-radius:12px;margin:8px 0">You will pay: <b>₦0</b> (Workers see only their earn)</div>
 <button onclick="createTask()" class="post-btn">Post Now</button>
 </div>
+  </div><div id="deposit" class="page hidden">
+<div class="card">
+<h3>Deposit</h3>
+
+<!-- 5895097608 -->
+<div style="background:#f0f8ef;border:2px dashed #0ea500;border-radius:16px;padding:14px;margin:12px 0;text-align:center">
+<small style="color:#555">Pay To This Account</small><br>
+<b style="font-size:22px">5895097608</b><br>
+<b>Moniepoint</b><br>
+<span style="font-weight:700">Ugochi Patricia Etumugo</span>
 </div>
-<div id="deposit" class="page hidden">
-<div class="card"><h3>Deposit</h3><p>Posting Balance: <b id="depBalText">₦0</b></p><input id="dName" placeholder="Account Name" style="width:100%;padding:12px;margin:6px 0;border-radius:12px;border:1px solid #ddd"><input id="dAmt" type="number" placeholder="Amount" style="width:100%;padding:12px;margin:6px 0;border-radius:12px;border:1px solid #ddd"><button onclick="submitDeposit()" style="width:100%;padding:12px;background:#0ea500;color:#fff;border:none;border-radius:12px;margin-top:8px">Submit Deposit</button></div>
+
+<p>Posting Balance: <b id="depBalText">₦0</b></p>
+<input id="dName" placeholder="Account Name" style="width:100%;padding:12px;margin:6px 0;border-radius:12px;border:1px solid #ddd">
+<input id="dAmt" type="number" placeholder="Amount" style="width:100%;padding:12px;margin:6px 0;border-radius:12px;border:1px solid #ddd">
+<button onclick="submitDeposit()" style="width:100%;padding:12px;background:#0ea500;color:#fff;border:none;border-radius:12px;margin-top:8px">Submit Deposit</button>
+</div>
 <div class="card"><h4>My Deposits</h4><div id="myDeposits"></div></div>
-</div>
+  </div>
 <div id="withdraw" class="page hidden">
 <div class="card"><h3>Withdraw</h3><div style="display:flex;gap:10px"><div>Av: <b id="wAvBal">₦0</b></div><div>Pd: <b id="wPdBal">₦0</b></div></div><p id="wInfo" style="font-size:12px;color:#888;margin:8px 0">Min ₦300 Charge ₦20</p><input id="wAccName" placeholder="Account Name" style="width:100%;padding:12px;margin:6px 0;border-radius:12px;border:1px solid #ddd"><input id="wAccNum" placeholder="Account Number" style="width:100%;padding:12px;margin:6px 0;border-radius:12px;border:1px solid #ddd"><input id="wBank" placeholder="Bank Name" style="width:100%;padding:12px;margin:6px 0;border-radius:12px;border:1px solid #ddd"><input id="wAmt" type="number" placeholder="Amount" style="width:100%;padding:12px;margin:6px 0;border-radius:12px;border:1px solid #ddd"><button onclick="requestWithdraw()" style="width:100%;padding:12px;background:#0ea500;color:#fff;border:none;border-radius:12px;margin-top:8px">Withdraw</button></div>
 <div class="card"><div id="myWithdrawals"></div></div>
